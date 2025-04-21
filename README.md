@@ -33,5 +33,5 @@ This microsite exemplifies how design can create impact. Beyond aesthetics, it t
 
 This project has strengthened my abilities in responsive design, micro-interactions, modal overlays, animation techniques, and more importantly, designing with purpose. It reflects my belief that designers are changemakers, and even a small microsite can become a voice for the planet.
 _______________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
-
+![Image](https://github.com/user-attachments/assets/8529aa08-1853-4aac-bf48-1141124f08be)
 
