@@ -1,0 +1,1007 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Free The Future!</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Winky+Sans&display=swap" rel="stylesheet">
+  <title>Climate Action Solutions</title>
+</head>
+<body>
+
+  <header class="navbar" id="navbar">
+    <div class="logo">Free The Future!</div>
+    <nav class="nav-links">
+      <a href="#">Home</a>
+      <a href="#">About</a>
+      <a href="#">Facts</a>
+      <a href="#">Solutions</a>
+      <a href="#">Take Action</a>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <div class="hero-img-container">
+      <img src="C:\Users\Hp\OneDrive\Documents\HTML module\free-the-future\images\hero-image.jpg" alt="Earth and Climate Art" class="hero-img"/>
+      <div class="glass-card hero-text">
+        <h1>
+          <span class="white">The Climate</span><br>
+          <span class="blue">is Changing</span><br>
+          <span class="white">—Are We?</span>
+        </h1>
+      </div>
+    </div>
+  </section>
+  <script>
+    // Shrink navbar on scroll
+    window.addEventListener("scroll", function () {
+      const navbar = document.getElementById("navbar");
+      navbar.classList.toggle("scrolled", window.scrollY > 20);
+    });
+  </script>
+  <section class="about-section" id="about">
+    <div class="about-glass-card">
+      <h2 class="about-heading">
+        <span class="leaf-icon">🌱</span> <em>About “Free the Future”</em>
+      </h2>
+      <p>We believe our planet deserves better.</p>
+      <p><strong>Free the Future</strong> is a digital call to action for individuals, communities, and creators who care about the Earth.</p>
+      <p>This microsite is designed to raise awareness about the climate crisis in a way that’s clear, human, and hopeful—because saving the planet shouldn’t feel impossible.</p>
+      <p>We don’t have all the time in the world.<br>
+      But we do have the power to act now, together.</p>
+      <div class="testimonial-card">
+        <div class="quote-icon">❝</div>
+        <p class="testimonial-text">
+          “The greatest threat to our planet is the belief that someone else will save it.”
+        </p>
+        <p class="testimonial-author">—Robert Swan</p>
+      </div>
+      
+    </div>
+    <script>
+      const aboutCard = document.querySelector(".about-glass-card");
+      window.addEventListener("scroll", () => {
+        const sectionTop = aboutCard.getBoundingClientRect().top;
+        const windowHeight = window.innerHeight;
+        if (sectionTop < windowHeight - 100) {
+          aboutCard.style.animationPlayState = 'running';
+        }
+      });
+    </script>
+  </section>
+  <!-- Added Climate Facts Carousel Section -->
+  <section class="facts-section" id="facts">
+    <h1>Key Climate Facts</h1>
+    
+    <div class="carousel">
+      <div class="carousel-container" id="carousel">
+        <!-- Cards will be dynamically inserted here -->
+      </div>
+    </div>
+    
+    <div class="controls">
+      <button class="btn prev-btn" id="prevBtn">&#10094;</button>
+      <button class="btn next-btn" id="nextBtn">&#10095;</button>
+    </div>
+    
+    <div class="indicators" id="indicators">
+      <!-- Indicators will be dynamically inserted here -->
+    </div>
+  </section>
+  <script>
+    
+    // Climate facts carousel
+    document.addEventListener('DOMContentLoaded', function() {
+      // Climate facts data
+      const facts = [
+        {
+          icon: '🌡️',
+          title: 'Rising Temperatures',
+          content: 'Global temperatures have increased by 1.1°C since the 19th century, mainly due to human activity.'
+        },
+        {
+          icon: '🧊',
+          title: 'Melting Arctic Ice',
+          content: 'Arctic sea ice is shrinking 13% each decade, disrupting ecosystems and global climate.'
+        },
+        {
+          icon: '🔥',
+          title: 'Hottest Years Ever',
+          content: 'The last 8 years have been the warmest on record—with 2023 among the top.'
+        },
+        {
+          icon: '🦋',
+          title: 'Biodiversity at Risk',
+          content: 'Over 1 million species face extinction due to habitat loss and changing climates.'
+        },
+        {
+          icon: '🌪️',
+          title: 'Extreme Weather Events',
+          content: 'Heatwaves, floods, and droughts are becoming more frequent and severe worldwide.'
+        },
+        {
+          icon: '🌍',
+          title: 'Social Inequality',
+          content: 'The most affected by climate change are often the least responsible for it.'
+        }
+      ];
+
+      const carousel = document.getElementById('carousel');
+      const indicators = document.getElementById('indicators');
+      let currentIndex = 0;
+      
+      // Create cards and add to DOM
+      function createCards() {
+        facts.forEach((fact, index) => {
+          const card = document.createElement('div');
+          card.className = 'card';
+          card.innerHTML = `
+            <div class="icon">${fact.icon}</div>
+            <h2>${fact.title}</h2>
+            <p>${fact.content}</p>
+          `;
+          card.addEventListener('click', () => {
+            goToSlide(index);
+          });
+          carousel.appendChild(card);
+          
+          // Create indicator
+          const indicator = document.createElement('div');
+          indicator.className = 'indicator';
+          indicator.dataset.index = index;
+          indicator.addEventListener('click', () => {
+            goToSlide(index);
+          });
+          indicators.appendChild(indicator);
+        });
+      }
+      
+      // Initialize carousel
+      function initCarousel() {
+        createCards();
+        updateCarousel();
+        
+        // Add event listeners
+        document.getElementById('prevBtn').addEventListener('click', prevSlide);
+        document.getElementById('nextBtn').addEventListener('click', nextSlide);
+        
+        // Add keyboard navigation
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'ArrowLeft') prevSlide();
+          if (e.key === 'ArrowRight') nextSlide();
+        });
+        
+        // Add touch support
+        let touchStartX = 0;
+        let touchEndX = 0;
+        
+        carousel.addEventListener('touchstart', (e) => {
+          touchStartX = e.changedTouches[0].screenX;
+        });
+        
+        carousel.addEventListener('touchend', (e) => {
+          touchEndX = e.changedTouches[0].screenX;
+          handleSwipe();
+        });
+        
+        function handleSwipe() {
+          if (touchEndX < touchStartX - 50) {
+            nextSlide();
+          }
+          if (touchEndX > touchStartX + 50) {
+            prevSlide();
+          }
+        }
+      }
+      
+      // Update carousel to show correct slides
+      function updateCarousel() {
+        const cards = document.querySelectorAll('.card');
+        const indicators = document.querySelectorAll('.indicator');
+        const totalSlides = cards.length;
+        
+        // Reset all cards and indicators
+        cards.forEach(card => {
+          card.className = 'card';
+          card.style.opacity = '0';
+        });
+        
+        indicators.forEach(indicator => {
+          indicator.className = 'indicator';
+        });
+        
+        // Calculate positions for 3 visible cards
+        const positions = [
+          mod(currentIndex - 1, totalSlides),  // left card
+          currentIndex,                       // center card
+          mod(currentIndex + 1, totalSlides)   // right card
+        ];
+        
+        // Apply appropriate classes
+        positions.forEach((pos, i) => {
+          // Position classes are 1-based (position-1 through position-3)
+          const positionClass = `position-${i + 1}`;
+          cards[pos].className = `card ${positionClass}`;
+        });
+        
+        // Update active indicator
+        indicators[currentIndex].className = 'indicator active';
+        
+        // Apply smooth opacity transition
+        setTimeout(() => {
+          cards.forEach(card => {
+            if (card.classList.contains('position-1')) card.style.opacity = '0.7';
+            if (card.classList.contains('position-2')) card.style.opacity = '1';
+            if (card.classList.contains('position-3')) card.style.opacity = '0.7';
+          });
+        }, 50);
+      }
+      
+      // Helper function for modulo that works with negative numbers
+      function mod(n, m) {
+        return ((n % m) + m) % m;
+      }
+      
+      // Navigation functions
+      function nextSlide() {
+        currentIndex = (currentIndex + 1) % facts.length;
+        updateCarousel();
+        addSlideTransition('next');
+      }
+      
+      function prevSlide() {
+        currentIndex = (currentIndex - 1 + facts.length) % facts.length;
+        updateCarousel();
+        addSlideTransition('prev');
+      }
+      
+      function goToSlide(index) {
+        if (index === currentIndex) return;
+        const direction = index > currentIndex ? 'next' : 'prev';
+        currentIndex = index;
+        updateCarousel();
+        addSlideTransition(direction);
+      }
+      
+      // Add smooth transition animation when changing slides
+      function addSlideTransition(direction) {
+        const activeCard = document.querySelector('.card.position-2');
+        if (activeCard) {
+          activeCard.style.animation = `fadeIn 0.5s ease-out`;
+          
+          setTimeout(() => {
+            activeCard.style.animation = '';
+          }, 500);
+        }
+      }
+      
+      // Initialize the carousel
+      if (carousel) {
+        initCarousel();
+      }
+    });
+  </script>
+ <section> 
+  <h1 class="title">Key Problems</h1>
+    
+    <div class="main-container">
+        <div class="visualization-container">
+            <div class="orbit-path"></div>
+            
+            <div class="center-circle">
+                <div class="center-text">The Problem</div>
+                <div class="circular-text" id="circular-text"></div>
+            </div>
+            
+            <!-- Problems and connections will be added here dynamically -->
+        </div>
+    </div>
+</section>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+      const container = document.querySelector('.visualization-container');
+      const centerX = container.offsetWidth / 2;
+      const centerY = container.offsetHeight / 2;
+      const orbitRadius = Math.min(container.offsetWidth, container.offsetHeight) * 0.34; // Increased from 0.32
+      
+      const problems = [
+          { id: 1, icon: '🔥', name: 'Global Warming', angle: 0 },
+          { id: 2, icon: '❄️', name: 'Melting Polar Ice & Rising Sea Levels', angle: 60 },
+          { id: 3, icon: '⚡', name: 'Extreme Weather Events', angle: 120 },
+          { id: 4, icon: '🌿', name: 'Loss of Biodiversity', angle: 180 },
+          { id: 5, icon: '♻️', name: 'Unsustainable Consumption', angle: 240 },
+          { id: 6, icon: '💧', name: 'Air & Water Pollution', angle: 300 }
+      ];
+      
+      // Add problems and connections
+      problems.forEach(function(problem, index) {
+          // Create problem element
+          const problemElement = document.createElement('div');
+          problemElement.className = 'problem';
+          problemElement.id = 'problem-' + problem.id;
+          
+          // Create problem content container (this will counter-rotate)
+          const problemContent = document.createElement('div');
+          problemContent.className = 'problem-content';
+          
+          // Add icon and text to the content container
+          problemContent.innerHTML = 
+              '<div class="problem-icon">' + problem.icon + '</div>' +
+              '<div class="problem-text">' + problem.id + '. ' + problem.name + '</div>';
+          
+          problemElement.appendChild(problemContent);
+          
+          // Set up orbit animation with different animation for each problem
+          problemElement.style.top = '50%';
+          problemElement.style.left = '50%';
+          
+          // Create a unique animation name for each problem for different orbit timing
+          const animationName = `orbit-${index}`;
+          const animationDuration = 60 + (index * 5); // Staggered duration
+          
+          // Create a style element for custom keyframes
+          const styleElement = document.createElement('style');
+          styleElement.textContent = `
+              @keyframes ${animationName} {
+                  from { transform: translate(-50%, -50%) rotate(${index * 60}deg) translateX(${orbitRadius}px) rotate(0deg); }
+                  to { transform: translate(-50%, -50%) rotate(${360 + index * 60}deg) translateX(${orbitRadius}px) rotate(-360deg); }
+              }
+          `;
+          document.head.appendChild(styleElement);
+          
+          // Apply the custom animation
+          problemElement.style.animation = `${animationName} ${animationDuration}s linear infinite`;
+          
+          // Create connection line
+          const connectionElement = document.createElement('div');
+          connectionElement.style.width = orbitRadius + 'px';
+          connectionElement.style.transform = 'translate(0, -50%) rotate(' + problem.angle + 'deg)';
+          
+          // Add elements to the DOM
+          container.appendChild(problemElement);
+          container.appendChild(connectionElement);
+      });
+      
+      // Create circular text
+      const circularText = document.getElementById('circular-text');
+      const text = 'The Problem · The Problem · The Problem · The Problem · The Problem ·The Problem · The Problem · The Problem · The Problem · The Problem ·';
+      
+      // Create SVG for circular text
+      const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      svg.setAttribute('viewBox', '0 0 200 200');
+      svg.style.width = '100%';
+      svg.style.height = '100%';
+      
+      const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      path.setAttribute('id', 'circlePath');
+      path.setAttribute('d', 'M 100,100 m -75,0 a 75,75 0 1,1 150,0 a 75,75 0 1,1 -150,0');
+      path.setAttribute('fill', 'none');
+      
+      const textElement = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      textElement.setAttribute('fill', 'rgba(255, 255, 255, 0.5)');
+      textElement.setAttribute('font-size', '10');
+      
+      const textPath = document.createElementNS('http://www.w3.org/2000/svg', 'textPath');
+      textPath.setAttribute('href', '#circlePath');
+      textPath.textContent = text;
+      
+      textElement.appendChild(textPath);
+      svg.appendChild(path);
+      svg.appendChild(textElement);
+      circularText.appendChild(svg);
+      
+      // Add hover effects
+      const problemElements = document.querySelectorAll('.problem');
+      for(let i = 0; i < problemElements.length; i++) {
+          problemElements[i].addEventListener('mouseenter', function() {
+              for(let j = 0; j < problemElements.length; j++) {
+                  if(problemElements[j] !== this) {
+                      problemElements[j].style.opacity = '0.5';
+                  }
+              }
+          });
+          
+          problemElements[i].addEventListener('mouseleave', function() {
+              for(let j = 0; j < problemElements.length; j++) {
+                  problemElements[j].style.opacity = '1';
+              }
+          });
+      }
+      
+      // Adjust positions on window resize
+      window.addEventListener('resize', function() {
+          const container = document.querySelector('.visualization-container');
+          const orbitRadius = Math.min(container.offsetWidth, container.offsetHeight) * 0.34;
+          
+          const connectionElements = document.querySelectorAll('.connection');
+          
+          for(let i = 0; i < connectionElements.length; i++) {
+              connectionElements[i].style.width = orbitRadius + 'px';
+          }
+          
+          // Update all the problem elements' animations with new radius
+          const problemElements = document.querySelectorAll('.problem');
+          for(let i = 0; i < problemElements.length; i++) {
+              const animationName = `orbit-${i}`;
+              const styleElement = document.querySelector(`style:contains(${animationName})`);
+              if (styleElement) {
+                  document.head.removeChild(styleElement);
+              }
+              
+              const newStyleElement = document.createElement('style');
+              newStyleElement.textContent = `
+                  @keyframes ${animationName} {
+                      from { transform: translate(-50%, -50%) rotate(${i * 60}deg) translateX(${orbitRadius}px) rotate(0deg); }
+                      to { transform: translate(-50%, -50%) rotate(${360 + i * 60}deg) translateX(${orbitRadius}px) rotate(-360deg); }
+                  }
+              `;
+              document.head.appendChild(newStyleElement);
+          }
+      });
+  });
+</script>
+<section class="climate-solutions-section" id="solutions">
+  <h1 class="title">Climate Action Solutions</h1>
+    
+  <div class="card-container">
+      <div class="solution-card left" id="card0">
+          <div class="card-header">
+              <span class="card-icon">🌞</span>
+              <span class="card-number">1.</span>
+              <h2 class="card-title">Power Up with Clean Energy</h2>
+          </div>
+          <div class="card-content">
+              <p>Imagine your home running on sunshine. Swap fossil fuels for solar or wind energy when you can. Every clean kilowatt brings us closer to a healthier planet.</p>
+          </div>
+          <div class="card-action">
+              <span class="card-icon">💡</span>
+              <p>Start small: switch to LED lights, unplug unused devices, or explore local green energy options.</p>
+          </div>
+      </div>
+      
+      <div class="solution-card center" id="card1">
+          <div class="card-header">
+              <span class="card-icon">🌳</span>
+              <span class="card-number">2.</span>
+              <h2 class="card-title">Plant Trees, Grow Hope</h2>
+          </div>
+          <div class="card-content">
+              <p>A single tree can be someone's shade, someone's breath. Forests are Earth's lungs—protect them, and you protect yourself.</p>
+          </div>
+          <div class="card-action">
+              <span class="card-icon">🌱</span>
+              <p>Join a local tree-planting drive, adopt a sapling, or donate to reforestation causes.</p>
+          </div>
+      </div>
+      
+      <div class="solution-card right" id="card2">
+          <div class="card-header">
+              <span class="card-icon">🛍️</span>
+              <span class="card-number">3.</span>
+              <h2 class="card-title">Live Lightly, Live Mindfully</h2>
+          </div>
+          <div class="card-content">
+              <p>The less we waste, the more we heal. Choose what you buy, use, and throw away with care.</p>
+          </div>
+          <div class="card-action">
+              <span class="card-icon">🌍</span>
+              <p>Refill, reuse, thrift, or go meatless once a week—every mindful habit adds up.</p>
+          </div>
+      </div>
+      
+      <div class="solution-card" id="card3" style="opacity: 0;">
+          <div class="card-header">
+              <span class="card-icon">🚲</span>
+              <span class="card-number">4.</span>
+              <h2 class="card-title">Move Green, Breathe Clean</h2>
+          </div>
+          <div class="card-content">
+              <p>Less traffic, more breeze. Walk, bike, or take the bus—it's good for you and even better for Earth.</p>
+          </div>
+          <div class="card-action">
+              <span class="card-icon">🚶</span>
+              <p>Try car-free weekends or organize a bike-to-work challenge with friends.</p>
+          </div>
+      </div>
+      
+      <div class="solution-card" id="card4" style="opacity: 0;">
+          <div class="card-header">
+              <span class="card-icon">📣</span>
+              <span class="card-number">5.</span>
+              <h2 class="card-title">Share the Spark</h2>
+          </div>
+          <div class="card-content">
+              <p>Change begins with a conversation. Talk about climate. Educate. Inspire.</p>
+          </div>
+          <div class="card-action">
+              <span class="card-icon">📚</span>
+              <p>Post, blog, volunteer, or chat over chai—make climate action part of everyday talk.</p>
+          </div>
+      </div>
+      
+      <div class="solution-card" id="card5" style="opacity: 0;">
+          <div class="card-header">
+              <span class="card-icon">🗳️</span>
+              <span class="card-number">6.</span>
+              <h2 class="card-title">Raise Your Voice for Change</h2>
+          </div>
+          <div class="card-content">
+              <p>The planet can't vote—but you can. Support leaders and policies that prioritize the Earth.</p>
+          </div>
+          <div class="card-action">
+              <span class="card-icon">✊</span>
+              <p>Sign petitions, attend climate marches, or write to local representatives. Your voice matters.</p>
+          </div>
+      </div>
+  </div>
+  
+  <div class="solution-dots">
+      <div class="solution-dot" data-index="0"></div>
+      <div class="solution-dot active" data-index="1"></div>
+      <div class="solution-dot" data-index="2"></div>
+      <div class="solution-dot" data-index="3"></div>
+      <div class="solution-dot" data-index="4"></div>
+      <div class="solution-dot" data-index="5"></div>
+  </div>
+  
+  <div class="solution-controls">
+      <button class="solution-btn prev">←</button>
+      <button class="solution-btn next">→</button>
+  </div>
+</section>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const cards = document.querySelectorAll('.solution-card');
+    const dots = document.querySelectorAll('.solution-dot');
+    const prevBtn = document.querySelector('.solution-btn.prev');
+    const nextBtn = document.querySelector('.solution-btn.next');
+    
+    let currentIndex = 1; // Start with the second card active
+    
+    // Add click event to dots
+    dots.forEach((dot, index) => {
+      dot.addEventListener('click', () => {
+        currentIndex = index;
+        updateCardDisplay();
+        updateDots();
+      });
+    });
+    
+    // Previous button event
+    if (prevBtn) {
+      prevBtn.addEventListener('click', () => {
+        if (currentIndex > 0) {
+          currentIndex--;
+          updateCardDisplay();
+          updateDots();
+        }
+      });
+    }
+    
+    // Next button event
+    if (nextBtn) {
+      nextBtn.addEventListener('click', () => {
+        if (currentIndex < cards.length - 1) {
+          currentIndex++;
+          updateCardDisplay();
+          updateDots();
+        }
+      });
+    }
+    
+    // Function to update card display based on current index
+    function updateCardDisplay() {
+      // Reset all cards
+      cards.forEach(card => {
+        card.classList.remove('left', 'center', 'right');
+        card.style.opacity = '0';
+        card.style.zIndex = '0';
+      });
+      
+      // Set the active card
+      if (cards[currentIndex]) {
+        cards[currentIndex].classList.add('center');
+        cards[currentIndex].style.opacity = '1';
+        cards[currentIndex].style.zIndex = '3';
+      }
+      
+      // Set the previous card
+      if (currentIndex > 0) {
+        cards[currentIndex - 1].classList.add('left');
+        cards[currentIndex - 1].style.opacity = '0.7';
+        cards[currentIndex - 1].style.zIndex = '1';
+      }
+      
+      // Set the next card
+      if (currentIndex < cards.length - 1) {
+        cards[currentIndex + 1].classList.add('right');
+        cards[currentIndex + 1].style.opacity = '0.7';
+        cards[currentIndex + 1].style.zIndex = '2';
+      }
+    }
+    
+    // Function to update dots
+    function updateDots() {
+      dots.forEach((dot, index) => {
+        dot.classList.toggle('active', index === currentIndex);
+      });
+    }
+    
+    // Add keyboard navigation
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft' && currentIndex > 0) {
+        currentIndex--;
+        updateCardDisplay();
+        updateDots();
+      } else if (e.key === 'ArrowRight' && currentIndex < cards.length - 1) {
+        currentIndex++;
+        updateCardDisplay();
+        updateDots();
+      }
+    });
+    
+    // Initialize cards on page load
+    updateCardDisplay();
+    updateDots();
+  });
+  </script>
+  <section class="take-action-section" id="take-action">
+    <div class="action-card">
+      <div class="action-container">
+        <div class="action-content">
+          <h1>Ready to be part of the solution?</h1>
+          <div class="flex-container">
+            <div class="line"></div>
+            <p class="message">The climate crisis may feel overwhelming, but your choices matter. Here's how you can start making a difference <br> 
+              —right here, right now.</p>
+          </div>
+          <button class="action-button"> Explore Ways to Act</button>
+        </div>
+        <div class="earth-container">
+          <img src="./images/Climate-Action.png" alt="Earth with lush greenery and clouds" class="earth-image">
+        </div>
+      </div>
+    </div>
+</section> 
+<section>
+
+  <div class="carousel-container">
+    <button class="carousel-btn prev">&#10094;</button>
+    <div class="carousel">
+        <!-- Slide 1: Plant a Tree -->
+        <div class="slide" data-index="0">
+            <div class="slide-image">
+                <img src="./images/1.jpg" alt="Plant a Tree">
+            </div>
+            <div class="slide-content">
+                <span class="emoji">🌳</span>
+                <h3 class="slide-title">Plant a Tree</h3>
+                <p class="slide-subtitle">"One tree, one future."</p>
+            </div>
+        </div>
+        
+        <!-- Slide 2: Shop Less, Reuse More -->
+        <div class="slide" data-index="1">
+            <div class="slide-image">
+                <img src="./images/2.jpg" alt="Shop Less, Reuse More">
+            </div>
+            <div class="slide-content">
+                <span class="emoji">🛍️</span>
+                <h3 class="slide-title">Shop Less, Reuse More</h3>
+                <p class="slide-subtitle">"Reuse is the new cool."</p>
+            </div>
+        </div>
+        
+        <!-- Slide 3: Use Public Transport -->
+        <div class="slide" data-index="2">
+            <div class="slide-image">
+                <img src="./images/3.jpg" alt="Use Public Transport">
+            </div>
+            <div class="slide-content">
+                <span class="emoji">🚌</span>
+                <h3 class="slide-title">Use Public Transport</h3>
+                <p class="slide-subtitle">"Less traffic, more life."</p>
+            </div>
+        </div>
+        
+        <!-- Slide 4: Say No to Plastic -->
+        <div class="slide" data-index="3">
+            <div class="slide-image">
+                <img src="./images/4.jpg" alt="Say No to Plastic">
+            </div>
+            <div class="slide-content">
+                <span class="emoji">🧴</span>
+                <h3 class="slide-title">Say No to Plastic</h3>
+                <p class="slide-subtitle">"One bottle at a time."</p>
+            </div>
+        </div>
+        
+        <!-- Slide 5: Talk About It -->
+        <div class="slide" data-index="4">
+            <div class="slide-image">
+                <img src="./images/5.jpg" alt="Talk About It">
+            </div>
+            <div class="slide-content">
+                <span class="emoji">✊</span>
+                <h3 class="slide-title">Talk About It</h3>
+                <p class="slide-subtitle">"Change starts with a convo."</p>
+            </div>
+        </div>
+        
+        <!-- Slide 6: Save Energy -->
+        <div class="slide" data-index="5">
+            <div class="slide-image">
+                <img src="./images/6.jpg" alt="Save Energy">
+            </div>
+            <div class="slide-content">
+                <span class="emoji">🔌</span>
+                <h3 class="slide-title">Save Energy</h3>
+                <p class="slide-subtitle">"Switch off. Save more."</p>
+            </div>
+        </div>
+    </div>
+    <button class="carousel-btn next">&#10095;</button>
+    
+    <div class="navigation">
+        <!-- Navigation dots will be added by JavaScript -->
+    </div>
+</div>
+</section> 
+<script>
+  
+document.addEventListener('DOMContentLoaded', function() {
+    const carousel = document.querySelector('.carousel');
+    const slides = document.querySelectorAll('.slide');
+    const prevBtn = document.querySelector('.prev');
+    const nextBtn = document.querySelector('.next');
+    const navigation = document.querySelector('.navigation');
+    
+    let currentIndex = 0;
+    let visibleSlides = getVisibleSlides();
+    
+    // Initialize navigation dots
+    function initNavigation() {
+        navigation.innerHTML = '';
+        for (let i = 0; i < slides.length; i++) {
+            const dot = document.createElement('div');
+            dot.classList.add('nav-dot');
+            if (i === currentIndex) dot.classList.add('active');
+            dot.addEventListener('click', () => goToSlide(i));
+            navigation.appendChild(dot);
+        }
+    }
+    
+    // Get the number of visible slides based on viewport width
+    function getVisibleSlides() {
+        const viewportWidth = window.innerWidth;
+        if (viewportWidth < 768) return 1;
+        if (viewportWidth < 1024) return 2;
+        return 3;
+    }
+    
+    // Update active dot
+    function updateNavigation() {
+        const dots = document.querySelectorAll('.nav-dot');
+        dots.forEach((dot, index) => {
+            if (index === currentIndex) {
+                dot.classList.add('active');
+            } else {
+                dot.classList.remove('active');
+            }
+        });
+    }
+    
+    // Go to specific slide
+    function goToSlide(index) {
+    const slide = slides[index];
+    if (!slide) return;
+
+    // Scroll directly to that slide
+    slide.scrollIntoView({ behavior: 'smooth', inline: 'center' });
+
+    // Update index
+    currentIndex = index;
+
+    // Update dots
+    updateNavigation();
+
+    // Add animation
+    slides.forEach(slide => slide.classList.remove('pulse'));
+    slide.classList.add('pulse');
+}
+
+    
+    // Event listeners for navigation buttons
+    prevBtn.addEventListener('click', () => {
+    const newIndex = (currentIndex - 1 + slides.length) % slides.length;
+    goToSlide(newIndex);
+    });
+
+    nextBtn.addEventListener('click', () => {
+    const newIndex = (currentIndex + 1) % slides.length;
+    goToSlide(newIndex);
+    });
+
+    // Initialize the carousel
+    initNavigation();
+    
+    // Auto-scroll function
+    let autoScrollInterval;
+    
+    function startAutoScroll() {
+        autoScrollInterval = setInterval(() => {
+            goToSlide(currentIndex + 1);
+        }, 4000);
+    }
+    
+    function stopAutoScroll() {
+        clearInterval(autoScrollInterval);
+    }
+    
+    // Start auto-scroll on page load
+    startAutoScroll();
+    
+    // Pause auto-scroll when hovering over carousel
+    carousel.addEventListener('mouseenter', stopAutoScroll);
+    carousel.addEventListener('mouseleave', startAutoScroll);
+    
+    // Responsive behavior
+    window.addEventListener('resize', () => {
+        // Update visible slides count on window resize
+        const newVisibleSlides = getVisibleSlides();
+        if (newVisibleSlides !== visibleSlides) {
+            visibleSlides = newVisibleSlides;
+            // Reset carousel position
+            goToSlide(0);
+        }
+    });
+    
+    // Touch events for mobile
+    let touchStartX = 0;
+    let touchEndX = 0;
+    
+    carousel.addEventListener('touchstart', (e) => {
+        touchStartX = e.changedTouches[0].screenX;
+        stopAutoScroll();
+    }, {passive: true});
+    
+    carousel.addEventListener('touchend', (e) => {
+        touchEndX = e.changedTouches[0].screenX;
+        handleSwipe();
+        startAutoScroll();
+    }, {passive: true});
+    
+    function handleSwipe() {
+        const swipeThreshold = 50;
+        if (touchStartX - touchEndX > swipeThreshold) {
+            // Swipe left
+            goToSlide(currentIndex + 1);
+        } else if (touchEndX - touchStartX > swipeThreshold) {
+            // Swipe right
+            goToSlide(currentIndex - 1);
+        }
+    }
+    
+    // Add micro-interactions to emojis
+    slides.forEach(slide => {
+        const emoji = slide.querySelector('.emoji');
+        
+        // Random rotation on hover
+        slide.addEventListener('mouseenter', () => {
+            const rotation = Math.random() * 20 - 10; // Random rotation between -10 and 10 degrees
+            emoji.style.transform = `rotate(${rotation}deg)`;
+        });
+        
+        slide.addEventListener('mouseleave', () => {
+            emoji.style.transform = 'rotate(0deg)';
+        });
+    });
+});
+</script>
+<br>
+<br>
+<br>
+<!-- Pledge Section -->
+  <section class="cta-block">
+    <h2>Already Doing Something Awesome?</h2>
+    <!-- Pledge Button -->
+    <button id="openModal" class="pledge-btn">Pledge Your Action</button>
+  <p class="cta-quote">🌍 Let The World Know You Are Helping.</p>
+  </section>
+    <!-- Overlay Modal -->
+    <div id="pledgeModal" class="modal-overlay hidden">
+      <div class="modal-content glass">
+        <span class="close-btn" id="closeModal">&times;</span>
+        <h2>✋ I Pledge To Help The Planet</h2>
+        <p>Choose 1 or more actions you're committing to — small steps matter.</p>
+        <form id="pledgeForm">
+          <label><input type="checkbox" /> I will reduce single-use plastic</label>
+          <label><input type="checkbox" /> I will walk or take public transport</label>
+          <label><input type="checkbox" /> I will talk to someone about climate change</label>
+          <label><input type="checkbox" /> I will reduce my energy use</label>
+          <label><input type="checkbox" /> I will plant a tree or support reforestation</label>
+          <label><input type="checkbox" /> I will consume mindfully and reuse</label>
+  
+          <input type="text" placeholder="✍️ Type here" />
+          <input type="email" placeholder="📩 you@earthlover.com" />
+  
+          <button type="submit" class="submit-btn">SUBMIT</button>
+        </form>
+      </div>
+    </div>
+  
+    <!-- Thank You Modal -->
+    <div id="thankYouModal" class="modal-overlay hidden">
+      <div class="modal-content thank-you glass">
+        <span class="close-btn" id="closeThankYou">&times;</span>
+        <h2>🌱 Thank You for Your Pledge!</h2>
+        <p>Every small action matters. You're part of the change.</p>
+      </div>
+    </div>
+  
+  
+<script>const openModal = document.getElementById("openModal");
+  const pledgeModal = document.getElementById("pledgeModal");
+  const thankYouModal = document.getElementById("thankYouModal");
+  const closeModal = document.getElementById("closeModal");
+  const closeThankYou = document.getElementById("closeThankYou");
+  const pledgeForm = document.getElementById("pledgeForm");
+  
+  openModal.addEventListener("click", () => {
+    pledgeModal.classList.remove("hidden");
+  });
+  
+  closeModal.addEventListener("click", () => {
+    pledgeModal.classList.add("hidden");
+  });
+  
+  closeThankYou.addEventListener("click", () => {
+    thankYouModal.classList.add("hidden");
+  });
+  
+  pledgeForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    pledgeModal.classList.add("hidden");
+    thankYouModal.classList.remove("hidden");
+  });
+  </script>
+  <footer class="footer">
+  <div class="footer-top">
+    <a href="#" class="back-to-top">Back To Top</a>
+  </div>
+
+  <h2 class="footer-title">Free the Future 🌱</h2>
+  <p class="footer-text">Empowering everyday action for a greener planet.</p>
+  <p class="footer-contact">
+    Have questions or ideas? We're here to listen — 📧 
+    <a href="mailto:freethefuture@earthmail.com">freethefuture@earthmail.com</a>
+  </p>
+
+  <div class="footer-social">
+    <a href="https://www.linkedin.com/company/climate-reality-project" target="_blank" aria-label="LinkedIn">
+      <i class="fab fa-linkedin"></i>
+    </a>
+    <a href="https://www.youthclimateleaders.org/" target="_blank" aria-label="YCL">
+      <i class="fas fa-globe"></i>
+    </a>
+    <a href="https://t.me/climateaction" target="_blank" aria-label="Telegram">
+      <i class="fab fa-telegram-plane"></i>
+    </a>
+    <a href="https://www.instagram.com/climate/" target="_blank" aria-label="Instagram">
+      <i class="fab fa-instagram"></i>
+    </a>
+    <a href="https://www.facebook.com/climate/" target="_blank" aria-label="Facebook">
+      <i class="fab fa-facebook-f"></i>
+    </a>
+  </div>
+
+  <p class="footer-credit">
+    Made with purpose by Vani Kothari • © 2025 Free the Future
+  </p>
+</footer>
+
+
+</body>
+</html>
+
